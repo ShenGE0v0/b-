@@ -1,8 +1,6 @@
 import requests
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
 
 
 
@@ -42,7 +40,7 @@ def modify_text(text):
     print(f'总行数（句子数）: {line_count}')  # 打印总行数
     return modified_lines
 def generate_wordcloud(text, font_path='simhei.ttf'):
-    # 创建词云对象，注意这里需要指定支持中文的字体文件
+    # 创建词云
     wc = WordCloud(font_path=font_path, background_color='white', width=800, height=600)
 
     # 生成词云
