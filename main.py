@@ -1,7 +1,7 @@
 import requests
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-
+import re
 class BiliBiliWordCloud:
     def __init__(self, oid, date, sessdata):
         self.oid = oid
@@ -56,4 +56,20 @@ class BiliBiliWordCloud:
         for line in modified_text:
             print(line)
         self.generate_wordcloud(' '.join(modified_text))
+class ULR:
+    def fetch_and_search(self, url):
+    
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+        }
 
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            print(f"请求失败，状态码：{response.status_code}")
+            return None
+
+        # 使用正则表达式匹配一个10位的数字，后面紧跟着"-1"
+        pattern = r'(\d{10})(?=-1)'
+        match = re.search(pattern, response.text)
+        
+        return match if match else None 
