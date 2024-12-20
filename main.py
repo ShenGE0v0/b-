@@ -2,6 +2,8 @@ import requests
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import re
+
+
 class BiliBiliWordCloud:
     def __init__(self, oid, date, sessdata):
         self.oid = oid
@@ -20,21 +22,41 @@ class BiliBiliWordCloud:
         return response
 
     def modify_text(self, text):
+        keyword = input("请输入查找的词汇")
         lines = text.split('\n')  # 按行分割文本
         modified_lines = []
-        humor_clock_count = 0  
+        humor_clock_count = 0
         line_count = 0  # 用于统计行数
         for line in lines:
             try:
                 post_colon = line.split(":")[1]
                 result = post_colon.split("@")[0]
                 modified_lines.append(result)
-                if '幽默闹钟' in result:  
-                    humor_clock_count += 1  
+                if keyword in result:
+                    humor_clock_count += 1
                 line_count += 1  # 计数器加1
             except IndexError:
                 continue  # 如果这一行没有":"或"@"，则跳过这一行
-        print(f'"幽默闹钟"出现的次数: {humor_clock_count}')  
+        print(f'"{keyword}"出现的次数: {humor_clock_count}')
+        print(f'总行数（句子数）: {line_count}')  # 打印总行数
+        return modified_lines
+
+    def modify_text_with_keyword(self, text, keyword):  # 新增的方法，接受关键词参数
+        lines = text.split('\n')  # 按行分割文本
+        modified_lines = []
+        keyword_count = 0
+        line_count = 0  # 用于统计行数
+        for line in lines:
+            try:
+                post_colon = line.split(":")[1]
+                result = post_colon.split("@")[0]
+                modified_lines.append(result)
+                if keyword in result:  # 使用用户提供的关键词进行搜索
+                    keyword_count += 1
+                line_count += 1  # 计数器加1
+            except IndexError:
+                continue  # 如果这一行没有":"或"@"，则跳过这一行
+        print(f'"{keyword}"出现的次数: {keyword_count}')
         print(f'总行数（句子数）: {line_count}')  # 打印总行数
         return modified_lines
 
@@ -56,9 +78,10 @@ class BiliBiliWordCloud:
         for line in modified_text:
             print(line)
         self.generate_wordcloud(' '.join(modified_text))
+
+
 class ULR:
     def fetch_and_search(self, url):
-    
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
         }
@@ -71,5 +94,5 @@ class ULR:
         # 使用正则表达式匹配一个10位的数字，后面紧跟着"-1"
         pattern = r'(\d{10})(?=-1)'
         match = re.search(pattern, response.text)
-        
-        return match if match else None 
+
+        return match if match else None
